@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras</title>
+</head>
+<body>
+    <h2>Carrinho de Compras</h2>
+    <ul>
+        {% for item in itens_carrinho %}
+        <li>
+            <h3>{{ item[0] }}</h3>
+            <p>Preço: €{{ item[1] }}</p>
+            <p>Quantidade: {{ item[2] }}</p>
+            <a href="/remove_from_cart/{{ item[3] }}">Remover</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Continuar Comprando</a>
+</body>
+</html>

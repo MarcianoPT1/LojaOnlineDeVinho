@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Vinhos</title>
+</head>
+<body>
+    <h2>Catálogo de Vinhos</h2>
+    <div>
+        {% if logged_in %}
+            <a href="/logout">Logout</a> | <a href="/cart">Carrinho</a>
+        {% else %}
+            <a href="/login">Login</a> | <a href="/register">Registrar</a>
+        {% endif %}
+    </div>
+    <ul>
+        {% for vinho in vinhos %}
+        <li>
+            <h3>{{ vinho[1] }}</h3>
+            <p>Marca: {{ vinho[2] }}</p>
+            <p>Preço: €{{ vinho[3] }}</p>
+            <p>Região: {{ vinho[4] }}</p>
+            <p>Ano: {{ vinho[5] }}</p>
+            <p>Descrição: {{ vinho[6] }}</p>
+            {% if logged_in %}
+                <a href="/add_to_cart/{{ vinho[0] }}">Adicionar ao Carrinho</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
