@@ -1,33 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Vinhos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Catálogo de Vinhos</h2>
-    <div>
-        {% if logged_in %}
-            <a href="/logout">Logout</a> | <a href="/cart">Carrinho</a>
-        {% else %}
-            <a href="/login">Login</a> | <a href="/register">Registrar</a>
-        {% endif %}
-    </div>
-    <ul>
-        {% for vinho in vinhos %}
-        <li>
-            <h3>{{ vinho[1] }}</h3>
-            <p>Marca: {{ vinho[2] }}</p>
-            <p>Preço: €{{ vinho[3] }}</p>
-            <p>Região: {{ vinho[4] }}</p>
-            <p>Ano: {{ vinho[5] }}</p>
-            <p>Descrição: {{ vinho[6] }}</p>
-            {% if logged_in %}
-                <a href="/add_to_cart/{{ vinho[0] }}">Adicionar ao Carrinho</a>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
+<body class="bg-gradient-to-br from-black to-red-900 min-h-screen">
+    <nav class="backdrop-blur-md bg-black/30 text-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-red-500 to-red-800 bg-clip-text text-transparent">Vinhos Elite</h1>
+            <div class="space-x-6">
+                <a href="/login" class="hover:text-red-400 transition duration-300">
+                    <i class="fas fa-user mr-2"></i>Login
+                </a>
+                <a href="/register" class="bg-gradient-to-r from-red-800 to-red-600 px-6 py-2 rounded-full hover:from-red-700 hover:to-red-500 transition duration-300 shadow-lg hover:shadow-red-500/20">
+                    Registrar
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for vinho in vinhos %}
+            <div class="group relative">
+                <div class="bg-black/40 backdrop-blur-md rounded-2xl overflow-hidden transition-all duration-300 hover:translate-y-[-5px] hover:shadow-2xl hover:shadow-red-500/20 border border-red-900/20">
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <h2 class="text-2xl font-bold text-white group-hover:text-red-400 transition-colors duration-300">{{ vinho[1] }}</h2>
+                            <span class="text-xl font-bold text-red-500">€{{ "%.2f"|format(vinho[3]) }}</span>
+                        </div>
+                        <div class="space-y-3 text-gray-300">
+                            <p class="flex items-center">
+                                <i class="fas fa-wine-bottle text-red-500 w-6"></i>
+                                <span class="ml-2">{{ vinho[2] }}</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-map-marker-alt text-red-500 w-6"></i>
+                                <span class="ml-2">{{ vinho[4] }}</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-calendar text-red-500 w-6"></i>
+                                <span class="ml-2">{{ vinho[5] }}</span>
+                            </p>
+                            <p class="mt-4 text-gray-400 leading-relaxed">{{ vinho[6] }}</p>
+                        </div>
+                        {% if logged_in %}
+                        <div class="mt-6">
+                            <a href="{{ url_for('add_to_cart', vinho_id=vinho[0]) }}"
+                               class="group/button flex items-center justify-center w-full bg-gradient-to-r from-red-800 to-red-600 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-500 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
+                                <i class="fas fa-shopping-cart mr-2 group-hover/button:scale-110 transition-transform duration-300"></i>
+                                Adicionar ao Carrinho
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer class="backdrop-blur-md bg-black/30 text-white mt-12">
+        <div class="max-w-7xl mx-auto px-6 py-8 text-center">
+            <p class="text-gray-400">&copy; 2025 Vinhos Elite. Todos os direitos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>

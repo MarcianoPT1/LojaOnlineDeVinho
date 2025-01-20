@@ -8,6 +8,13 @@ app.secret_key = 'supersecretkey'  # Chave secreta para sessões
 conn = sqlite3.connect('loja_vinhos.db', check_same_thread=False)
 cursor = conn.cursor()
 
+@app.route('/admin/register-wine', methods=['GET', 'POST'])
+def register_wine():
+    if request.method == 'POST':
+        # Process the form data and add to database
+        return redirect(url_for('admin_dashboard'))
+    return render_template('admin_wine_register.html')
+
 @app.route('/')
 def home():
     cursor.execute('SELECT * FROM vinhos')
