@@ -8,8 +8,22 @@ app.secret_key = 'supersecretkey'  # Chave secreta para sessões
 conn = sqlite3.connect('loja_vinhos.db', check_same_thread=False)
 cursor = conn.cursor()
 
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        password = request.form['password']
+        if password == 'admin':  # Substitua 'adminpassword' pela palavra-passe desejada
+            session['admin_logged_in'] = True
+            return redirect(url_for('register_wine'))
+        else:
+            return "Palavra-passe inválida!"
+    return render_template('admin_login.html')
+
 @app.route('/admin/register-wine', methods=['GET', 'POST'])
 def register_wine():
+    if 'admin_logged_in' not in session:
+        return redirect(url_for('admin_login'))
+
     if request.method == 'POST':
         # Process the form data and add to database
         return redirect(url_for('admin_dashboard'))
