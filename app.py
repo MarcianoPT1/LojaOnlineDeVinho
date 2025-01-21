@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from datetime import datetime
 import sqlite3
 
 app = Flask(__name__)
@@ -19,10 +20,86 @@ def admin_login():
             return "Palavra-passe inválida!"
     return render_template('admin_login.html')
 
+
 @app.route('/admin/register-wine', methods=['GET', 'POST'])
 def register_wine():
     if 'admin_logged_in' not in session:
         return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        nome = request.form['nome']
+        preco = request.form['preco']
+        marca = request.form['marca']
+        regiao = request.form['regiao']
+        ano = request.form['ano']
+        descricao = request.form['descricao']
+
+        # Process the form data and add to database
+        cursor.execute('''INSERT INTO vinhos (nome, preco, marca, regiao, ano, descricao)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)''', (nome, preco, marca, regiao, ano, descricao))
+        conn.commit()
+
+        return redirect(url_for('admin_dashboard'))
+    return render_template('admin_wine_register.html')
+
+@app.route('/finalizar_compra', methods=['POST'])
+def finalizar_compra():
+    if 'user_id' in session:
+        utilizador_id = session['user_id']
+        cursor.execute('SELECT morada1, morada2 FROM utilizadores WHERE id=?', (utilizador_id,))
+        utilizador = cursor.fetchone()
+        morada1, morada2 = utilizador[0], utilizador[1]
+
+        cursor.execute('''SELECT vinho_id, quantidade FROM carrinho WHERE utilizador_id=?''', (utilizador_id,))
+        itens_carrinho = cursor.fetchall()
+
+        for item in itens_carrinho:
+            vinho_id, quantidade = item
+            date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor.execute('''INSERT INTO vendas (vinho_id, utilizador_id, date, quantidade, morada1, morada2)
+                              VALUES (?, ?, ?, ?, ?, ?)''',
+                           (vinho_id, utilizador_id, date, quantidade, morada1, morada2))
+
+        # Limpar o carrinho após finalizar a compra
+        cursor.execute('DELETE FROM carrinho WHERE utilizador_id=?', (utilizador_id,))
+        conn.commit()
+
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if 'user_id' in session:
+        utilizador_id = session['user_id']
+        if request.method == 'POST':
+            nome_utilizador = request.form['nome_utilizador']
+            email = request.form['email']
+            data_nascimento = request.form['data_nascimento']
+            morada1 = request.form['morada1']
+            morada2 = request.form['morada2']
+            cursor.execute('''UPDATE utilizadores SET nome_utilizador=?, email=?, data_nascimento=?, morada1=?, morada2=?
+                              WHERE id=?''',
+                           (nome_utilizador, email, data_nascimento, morada1, morada2, utilizador_id))
+            conn.commit()
+            return redirect(url_for('home'))
+        else:
+            cursor.execute('SELECT * FROM utilizadores WHERE id=?', (utilizador_id,))
+            utilizador = cursor.fetchone()
+            return render_template('settings.html', utilizador=utilizador)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    if 'user_id' in session:
+        utilizador_id = session['user_id']
+        cursor.execute('DELETE FROM utilizadores WHERE id=?', (utilizador_id,))
+        conn.commit()
+        session.pop('user_id', None)
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
         # Process the form data and add to database

@@ -6,6 +6,12 @@
     <title>Login - Vinhos Elite</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .input-field {
+            color: black;
+            background-color: white;
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-black to-red-900 min-h-screen flex flex-col">
     <nav class="backdrop-blur-md bg-black/30 text-white">
@@ -21,12 +27,12 @@
                 <div>
                     <label class="block text-gray-300 mb-2" for="email">Email</label>
                     <input type="email" id="email" name="email" required
-                           class="w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors">
+                           class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
                 </div>
                 <div>
                     <label class="block text-gray-300 mb-2" for="password">Password</label>
                     <input type="password" id="password" name="password" required
-                           class="w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors">
+                           class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
                 </div>
                 <button type="submit"
                         class="w-full bg-gradient-to-r from-red-800 to-red-600 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-500 transition-all duration-300 shadow-lg hover:shadow-red-500/20">

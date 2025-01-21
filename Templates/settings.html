@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar - Vinhos Elite</title>
+    <title>Definições - Vinhos Elite</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -22,47 +22,44 @@
 
     <main class="flex-grow flex items-center justify-center px-6 py-12">
         <div class="bg-black/40 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-red-900/20">
-            <h2 class="text-2xl font-bold text-white mb-6 text-center">Criar Conta</h2>
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">Definições</h2>
             <form method="POST" class="space-y-6">
                 <div>
                     <label class="block text-gray-300 mb-2" for="nome_utilizador">Nome</label>
-                    <input type="text" id="nome_utilizador" name="nome_utilizador" required
+                    <input type="text" id="nome_utilizador" name="nome_utilizador" value="{{ utilizador[1] }}" required
                            class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
                 </div>
                 <div>
                     <label class="block text-gray-300 mb-2" for="email">Email</label>
-                    <input type="email" id="email" name="email" required
-                           class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
-                </div>
-                <div>
-                    <label class="block text-gray-300 mb-2" for="password">Password</label>
-                    <input type="password" id="password" name="password" required
+                    <input type="email" id="email" name="email" value="{{ utilizador[2] }}" required
                            class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
                 </div>
                 <div>
                     <label class="block text-gray-300 mb-2" for="data_nascimento">Data de Nascimento</label>
-                    <input type="date" id="data_nascimento" name="data_nascimento" required
+                    <input type="date" id="data_nascimento" name="data_nascimento" value="{{ utilizador[4] }}" required
                            class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
                 </div>
                 <div>
                     <label class="block text-gray-300 mb-2" for="morada1">Morada 1</label>
-                    <input type="text" id="morada1" name="morada1" required
+                    <input type="text" id="morada1" name="morada1" value="{{ utilizador[5] }}" required
                            class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
                 </div>
                 <div>
-                    <label class="block text-gray-300 mb-2" for="morada2">Morada 2 (Opcional)</label>
-                    <input type="text" id="morada2" name="morada2"
+                    <label class="block text-gray-300 mb-2" for="morada2">Morada 2</label>
+                    <input type="text" id="morada2" name="morada2" value="{{ utilizador[6] }}"
                            class="input-field w-full bg-black/40 border border-red-900/20 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 transition-colors">
                 </div>
                 <button type="submit"
                         class="w-full bg-gradient-to-r from-red-800 to-red-600 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-500 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
-                    Registrar
+                    Atualizar
                 </button>
             </form>
-            <p class="mt-6 text-center text-gray-400">
-                Já tem conta?
-                <a href="/login" class="text-red-400 hover:text-red-300 transition-colors">Login</a>
-            </p>
+            <form action="/delete_account" method="post" class="mt-6">
+                <button type="submit"
+                        class="w-full bg-gradient-to-r from-red-800 to-red-600 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-500 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
+                    Excluir Conta
+                </button>
+            </form>
         </div>
     </main>
 

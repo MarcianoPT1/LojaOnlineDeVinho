@@ -1,20 +1,21 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import sqlite3
+import os
 
 # Conexão com a base de dados
 conn = sqlite3.connect('loja_vinhos.db')
 cursor = conn.cursor()
 
 # Funções para manipulação da base de dados
-def inserir_vinho(nome, marca, preco, regiao, ano, descricao):
-    cursor.execute('''INSERT INTO vinhos (nome, marca, preco, regiao, ano, descricao)
-                      VALUES (?, ?, ?, ?, ?, ?)''', (nome, marca, preco, regiao, ano, descricao))
+def inserir_vinho(nome, marca, preco, regiao, ano, descricao, imagem):
+    cursor.execute('''INSERT INTO vinhos (nome, marca, preco, regiao, ano, descricao, imagem)
+                      VALUES (?, ?, ?, ?, ?, ?, ?)''', (nome, marca, preco, regiao, ano, descricao, imagem))
     conn.commit()
 
-def atualizar_vinho(id, nome, marca, preco, regiao, ano, descricao):
-    cursor.execute('''UPDATE vinhos SET nome=?, marca=?, preco=?, regiao=?, ano=?, descricao=?
-                      WHERE id=?''', (nome, marca, preco, regiao, ano, descricao, id))
+def atualizar_vinho(id, nome, marca, preco, regiao, ano, descricao, imagem):
+    cursor.execute('''UPDATE vinhos SET nome=?, marca=?, preco=?, regiao=?, ano=?, descricao=?, imagem=?
+                      WHERE id=?''', (nome, marca, preco, regiao, ano, descricao, imagem, id))
     conn.commit()
 
 def excluir_vinho(id):
@@ -29,7 +30,8 @@ def adicionar_vinho():
     regiao = entry_regiao.get()
     ano = int(entry_ano.get())
     descricao = entry_descricao.get()
-    inserir_vinho(nome, marca, preco, regiao, ano, descricao)
+    imagem = entry_imagem.get()
+    inserir_vinho(nome, marca, preco, regiao, ano, descricao, imagem)
     messagebox.showinfo("Sucesso", "Vinho adicionado com sucesso!")
 
 # Função para atualizar vinho
@@ -41,7 +43,8 @@ def atualizar_vinho_interface():
     regiao = entry_regiao.get()
     ano = int(entry_ano.get())
     descricao = entry_descricao.get()
-    atualizar_vinho(id, nome, marca, preco, regiao, ano, descricao)
+    imagem = entry_imagem.get()
+    atualizar_vinho(id, nome, marca, preco, regiao, ano, descricao, imagem)
     messagebox.showinfo("Sucesso", "Vinho atualizado com sucesso!")
 
 # Função para excluir vinho
@@ -49,6 +52,13 @@ def excluir_vinho_interface():
     id = int(entry_id.get())
     excluir_vinho(id)
     messagebox.showinfo("Sucesso", "Vinho excluído com sucesso!")
+
+# Função para selecionar imagem
+def selecionar_imagem():
+    filepath = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png *.gif")])
+    if filepath:
+        entry_imagem.delete(0, END)
+        entry_imagem.insert(0, filepath)
 
 # Interface Tkinter
 janela = Tk()
@@ -83,9 +93,14 @@ Label(janela, text="Descrição").grid(row=6, column=0)
 entry_descricao = Entry(janela)
 entry_descricao.grid(row=6, column=1)
 
+Label(janela, text="Imagem").grid(row=7, column=0)
+entry_imagem = Entry(janela)
+entry_imagem.grid(row=7, column=1)
+Button(janela, text="Selecionar Imagem", command=selecionar_imagem).grid(row=7, column=2)
+
 # Botões
-Button(janela, text="Adicionar Vinho", command=adicionar_vinho).grid(row=7, column=0)
-Button(janela, text="Atualizar Vinho", command=atualizar_vinho_interface).grid(row=7, column=1)
-Button(janela, text="Excluir Vinho", command=excluir_vinho_interface).grid(row=7, column=2)
+Button(janela, text="Adicionar Vinho", command=adicionar_vinho).grid(row=8, column=0)
+Button(janela, text="Atualizar Vinho", command=atualizar_vinho_interface).grid(row=8, column=1)
+Button(janela, text="Excluir Vinho", command=excluir_vinho_interface).grid(row=8, column=2)
 
 janela.mainloop()

@@ -5,10 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="36332b04-e834-44e3-858f-e8a1ebd563f1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/LojaOnlineDeVinho.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LojaOnlineDeVinho.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Templates/settings.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Templates/admin_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/Templates/admin_login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Templates/admin_wine_register.html" beforeDir="false" afterPath="$PROJECT_DIR$/Templates/admin_wine_register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Templates/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/Templates/cart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Templates/catalog.html" beforeDir="false" afterPath="$PROJECT_DIR$/Templates/catalog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/Templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/Templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/admin_interface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loja_vinhos.db" beforeDir="false" afterPath="$PROJECT_DIR$/loja_vinhos.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +71,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Documents\Escola\Ipluso - CSTESP\Fundamentos de Bases de Dados\Trabalho1\TrabalhoFinal\LojaOnlineDeVinho\Templates" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

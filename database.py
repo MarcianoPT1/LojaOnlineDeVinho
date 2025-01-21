@@ -1,11 +1,18 @@
 from tkinter import *
+from tkinter import messagebox, filedialog
 import sqlite3
-import datetime
+import os
 
 janela = Tk()
 
 conn = sqlite3.connect('loja_vinhos.db')
 cursor = conn.cursor()
+
+# Adicionar campo de imagem na tabela de vinhos, se não existir
+try:
+    cursor.execute('''ALTER TABLE vinhos ADD COLUMN imagem TEXT''')
+except sqlite3.OperationalError:
+    pass  # O campo já existe
 
 # Tabela dos Vinhos
 cursor.execute('''CREATE TABLE IF NOT EXISTS vinhos (
@@ -15,7 +22,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS vinhos (
                     preco REAL NOT NULL,
                     regiao TEXT NOT NULL,
                     ano INTEGER NOT NULL,
-                    descricao TEXT NOT NULL)
+                    descricao TEXT NOT NULL,
+                    imagem TEXT)
                    ''')
 conn.commit()
 
@@ -41,7 +49,6 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS vendas (
                     morada1 TEXT NOT NULL,
                     morada2 TEXT NOT NULL)
                     ''')
-
 conn.commit()
 
 # Tabela de Carrinho
