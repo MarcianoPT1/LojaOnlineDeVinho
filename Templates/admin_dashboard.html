@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin - Vinhos Elite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-black to-red-900 min-h-screen flex flex-col">
+    <nav class="backdrop-blur-md bg-black/30 text-white">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-3xl font-bold bg-gradient-to-r from-red-500 to-red-800 bg-clip-text text-transparent">Vinhos Elite</a>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-300">Admin Dashboard</span>
+                <a href="/admin/register-wine" class="bg-gradient-to-r from-red-800 to-red-600 px-4 py-2 rounded-full hover:from-red-700 hover:to-red-500 transition duration-300 shadow-lg hover:shadow-red-500/20">Registrar Vinho</a>
+                <a href="/logout" class="bg-gradient-to-r from-red-800 to-red-600 px-4 py-2 rounded-full hover:from-red-700 hover:to-red-500 transition duration-300 shadow-lg hover:shadow-red-500/20">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col items-center justify-center px-6 py-12">
+        <div class="bg-black/40 backdrop-blur-md rounded-2xl p-8 w-full max-w-4xl border border-red-900/20">
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">Vinhos Cadastrados</h2>
+            <table class="w-full text-left text-gray-300 mb-12">
+                <thead>
+                    <tr>
+                        <th class="border-b border-red-900/20 px-4 py-2">ID</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Nome</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Marca</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Preço (€)</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Ano</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Região</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vinho in vinhos %}
+                    <tr>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ vinho[0] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ vinho[1] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ vinho[2] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ vinho[3] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ vinho[4] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ vinho[5] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">
+                            <a href="/admin/update-wine?id={{ vinho[0] }}" class="text-yellow-400 hover:text-yellow-300 transition-colors">Atualizar</a>
+                            <a href="/admin/confirm-delete-wine?id={{ vinho[0] }}" class="text-red-400 hover:text-red-300 transition-colors ml-4">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">Análise de Vendas</h2>
+            <table class="w-full text-left text-gray-300 mb-6">
+                <thead>
+                    <tr>
+                        <th class="border-b border-red-900/20 px-4 py-2">ID</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">ID do Vinho</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">ID do Utilizador</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Data</th>
+                        <th class="border-b border-red-900/20 px-4 py-2">Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venda in vendas %}
+                    <tr>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ venda[0] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ venda[1] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ venda[2] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ venda[3] }}</td>
+                        <td class="border-b border-red-900/20 px-4 py-2">{{ venda[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center">
+                <a href="/admin/exportar-vendas" class="bg-gradient-to-r from-red-800 to-red-600 text-white py-3 px-6 rounded-xl hover:from-red-700 hover:to-red-500 transition-all duration-300 shadow-lg hover:shadow-red-500/20">
+                    Exportar Vendas em CSV
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="backdrop-blur-md bg-black/30 text-white mt-12">
+        <div class="max-w-7xl mx-auto px-6 py-8 text-center">
+            <p class="text-gray-400">&copy; 2025 Vinhos Elite. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

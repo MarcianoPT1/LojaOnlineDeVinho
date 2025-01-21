@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+import os
+import csv
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from datetime import datetime
 import sqlite3
 
@@ -9,17 +11,50 @@ app.secret_key = 'supersecretkey'  # Chave secreta para sessões
 conn = sqlite3.connect('loja_vinhos.db', check_same_thread=False)
 cursor = conn.cursor()
 
+
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
         password = request.form['password']
         if password == 'admin':  # Substitua 'adminpassword' pela palavra-passe desejada
             session['admin_logged_in'] = True
-            return redirect(url_for('register_wine'))
+            return redirect(url_for('admin_dashboard'))
         else:
             return "Palavra-passe inválida!"
     return render_template('admin_login.html')
 
+
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    if 'admin_logged_in' not in session:
+        return redirect(url_for('admin_login'))
+
+    cursor.execute('SELECT * FROM vinhos')
+    vinhos = cursor.fetchall()
+
+    cursor.execute('SELECT id, vinho_id, utilizador_id, date, quantidade FROM vendas ORDER BY date')
+    vendas = cursor.fetchall()
+
+    return render_template('admin_dashboard.html', vinhos=vinhos, vendas=vendas)
+
+
+@app.route('/admin/exportar-vendas')
+def exportar_vendas():
+    if 'admin_logged_in' not in session:
+        return redirect(url_for('admin_login'))
+
+    cursor.execute('SELECT id, vinho_id, utilizador_id, date, quantidade FROM vendas ORDER BY date')
+    vendas = cursor.fetchall()
+
+    # Criar o arquivo CSV
+    csv_path = os.path.join(app.root_path, 'vendas.csv')
+    with open(csv_path, 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(['ID', 'ID do Vinho', 'ID do Utilizador', 'Data', 'Quantidade'])
+        for venda in vendas:
+            csvwriter.writerow(venda)
+
+    return send_file(csv_path, as_attachment=True)
 
 @app.route('/admin/register-wine', methods=['GET', 'POST'])
 def register_wine():
@@ -34,13 +69,62 @@ def register_wine():
         ano = request.form['ano']
         descricao = request.form['descricao']
 
-        # Process the form data and add to database
         cursor.execute('''INSERT INTO vinhos (nome, preco, marca, regiao, ano, descricao)
-                          VALUES (?, ?, ?, ?, ?, ?, ?)''', (nome, preco, marca, regiao, ano, descricao))
+                          VALUES (?, ?, ?, ?, ?, ?)''', (nome, preco, marca, regiao, ano, descricao))
         conn.commit()
 
         return redirect(url_for('admin_dashboard'))
     return render_template('admin_wine_register.html')
+
+
+@app.route('/admin/update-wine', methods=['GET', 'POST'])
+def update_wine():
+    if 'admin_logged_in' not in session:
+        return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        id = request.form['id']
+        nome = request.form['nome']
+        preco = request.form['preco']
+        marca = request.form['marca']
+        regiao = request.form['regiao']
+        ano = request.form['ano']
+        descricao = request.form['descricao']
+
+        cursor.execute('''UPDATE vinhos SET nome=?, preco=?, marca=?, regiao=?, ano=?, descricao=?
+                          WHERE id=?''', (nome, preco, marca, regiao, ano, descricao, id))
+        conn.commit()
+
+        return redirect(url_for('admin_dashboard'))
+    else:
+        id = request.args.get('id')
+        cursor.execute('SELECT * FROM vinhos WHERE id=?', (id,))
+        vinho = cursor.fetchone()
+        return render_template('update_wine.html', vinho=vinho)
+
+
+@app.route('/admin/confirm-delete-wine', methods=['GET'])
+def confirm_delete_wine():
+    if 'admin_logged_in' not in session:
+        return redirect(url_for('admin_login'))
+
+    id = request.args.get('id')
+    cursor.execute('SELECT * FROM vinhos WHERE id=?', (id,))
+    vinho = cursor.fetchone()
+    return render_template('confirm_delete.html', vinho=vinho)
+
+
+@app.route('/admin/delete-wine', methods=['POST'])
+def delete_wine():
+    if 'admin_logged_in' not in session:
+        return redirect(url_for('admin_login'))
+
+    id = request.form['id']
+    cursor.execute('DELETE FROM vinhos WHERE id=?', (id,))
+    conn.commit()
+
+    return redirect(url_for('admin_dashboard'))
+
 
 @app.route('/finalizar_compra', methods=['POST'])
 def finalizar_compra():
@@ -68,6 +152,7 @@ def finalizar_compra():
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     if 'user_id' in session:
@@ -90,6 +175,7 @@ def settings():
     else:
         return redirect(url_for('login'))
 
+
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
     if 'user_id' in session:
@@ -101,10 +187,6 @@ def delete_account():
     else:
         return redirect(url_for('login'))
 
-    if request.method == 'POST':
-        # Process the form data and add to database
-        return redirect(url_for('admin_dashboard'))
-    return render_template('admin_wine_register.html')
 
 @app.route('/')
 def home():
@@ -112,6 +194,7 @@ def home():
     vinhos = cursor.fetchall()
     logged_in = 'user_id' in session
     return render_template('catalog.html', vinhos=vinhos, logged_in=logged_in)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -127,6 +210,7 @@ def login():
             return "Credenciais inválidas!"
     return render_template('login.html')
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -137,10 +221,12 @@ def register():
         morada1 = request.form['morada1']
         morada2 = request.form['morada2']
         cursor.execute('''INSERT INTO utilizadores (nome_utilizador, email, password, data_nascimento, morada1, morada2)
-                          VALUES (?, ?, ?, ?, ?, ?)''', (nome_utilizador, email, password, data_nascimento, morada1, morada2))
+                          VALUES (?, ?, ?, ?, ?, ?)''',
+                       (nome_utilizador, email, password, data_nascimento, morada1, morada2))
         conn.commit()
         return redirect(url_for('login'))
     return render_template('register.html')
+
 
 @app.route('/logout')
 def logout():
